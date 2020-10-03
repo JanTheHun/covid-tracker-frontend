@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* app-graph-manager {
+    position: relative;
+    display: block;
+    height: 100%;
+} */
+
+.mat-tab-group {
+    height: 100%
+}
+
+.mat-tab-body-wrapper {
+    height: 100%;
+}
+/* .chart-wrapper {
+    height: 100%!important;
+    width: 100%!important;
+    position: relative!important;
+} */
+
+app-display-chart {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}

@@ -1,0 +1,54 @@
+.form-full-width {
+    width: 100%;
+}
+.sidenav {
+    max-width: 400px;
+}
+.graphManagerHeader {
+    height: 70px;
+    text-align: center;
+}
+.example-container {
+    height: 100%;
+}
+
+.displayArea {
+    width: 100%;
+    position: relative;
+    margin: 10px;
+}
+
+
+.graphButtons {
+    position: absolute;
+    right: 0px;
+    z-index: 2;
+}
+
+.graphDeleteBtn {
+    position: absolute;
+    right: 0px;
+    z-index: 2;
+}
+
+.graphBtn {
+    float: right;
+}
+
+.chartArea {
+    position: relative;
+    top: 5px;
+}
+
+.newGraphButton {
+    float: left;
+}
+
+.gridListHolder {
+    height: calc(100% - 70px);
+    overflow-y: auto;
+}
+
+.example-sidenav-content {
+    height: 100%;
+}

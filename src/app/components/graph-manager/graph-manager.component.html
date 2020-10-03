@@ -1,0 +1,82 @@
+<mat-drawer-container class="example-container" autosize>
+  
+  <mat-drawer #drawer class="sidenav" mode="side">
+
+    <mat-form-field class="form-full-width" appearance="fill">
+      <mat-label>Kezdődátum</mat-label>
+      <input matInput [matDatepicker]="fromPicker" (dateChange)="onDateChange($event, 'from')" [value]="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #fromPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="form-full-width" appearance="fill">
+      <mat-label>Végdátum</mat-label>
+      <input matInput [matDatepicker]="toPicker" (dateChange)="onDateChange($event, 'to')" [value]="toDate">
+      <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+      <mat-datepicker #toPicker></mat-datepicker>
+    </mat-form-field>
+  
+    <mat-form-field class="form-full-width" appearance="fill">
+      <mat-label>Adatok</mat-label>
+      <mat-select multiple [(value)]="selectedFields">
+        <mat-option *ngFor="let field of fieldNames" [value]="field">{{fields[field]}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button type="button" mat-button (click)="onGoClick()">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">done</mat-icon>
+    </button>
+    <button type="button" mat-button (click)="drawer.close()">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">highlight_off</mat-icon>
+    </button>
+
+  </mat-drawer>
+
+  
+  <div class="example-sidenav-content">
+
+    <div class="graphManagerHeader">
+  
+      <button type="button" class="newGraphButton" mat-button (click)="drawer.toggle()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">playlist_add</mat-icon>
+      </button>
+    
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [(value)]="selectedColumnNumber">
+        <mat-button-toggle [value]="'1'"><mat-icon aria-hidden="false" aria-label="Example home icon">view_headline</mat-icon></mat-button-toggle>
+        <mat-button-toggle [value]="'2'"><mat-icon aria-hidden="false" aria-label="Example home icon">border_all</mat-icon></mat-button-toggle>
+        <mat-button-toggle [value]="'3'"><mat-icon aria-hidden="false" aria-label="Example home icon">grid_on</mat-icon></mat-button-toggle>
+      </mat-button-toggle-group>
+    
+    </div>
+
+    <div class="gridListHolder">
+
+      <mat-grid-list [cols]="gridColumns" rowHeight="2:1">
+
+        <mat-grid-tile *ngFor="let graph of graphs; let i = index;">
+            <div class="displayArea" (mouseover)="onMouseStatus(i, true)" (mouseleave)="onMouseStatus(i, false)">
+
+              <div class="graphButtons">
+
+                <button mat-button *ngIf="mouseHoverMap[i]" class="graphBtn" (click)="onDeleteGraph(i)">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon">delete</mat-icon>
+                </button>
+                <button mat-button *ngIf="mouseHoverMap[i]" class="graphBtn" (click)="onEditGraph(i)">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon">edit</mat-icon>
+                </button>
+
+              </div>
+              
+              <app-display-chart class="chartArea" [chartData]="graph"></app-display-chart>
+
+            </div>
+
+        </mat-grid-tile>
+
+      </mat-grid-list>
+
+    </div>
+
+  </div>
+
+</mat-drawer-container>
