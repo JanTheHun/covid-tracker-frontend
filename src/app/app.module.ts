@@ -14,6 +14,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ChartsModule } from 'ng2-charts';
 import { GraphManagerComponent } from './components/graph-manager/graph-manager.component';
@@ -41,7 +44,10 @@ import { DisplayChartComponent } from './components/display-chart/display-chart.
     MatSidenavModule,
     MatIconModule,
     MatButtonToggleModule,
-
+    MatExpansionModule,
+    MatListModule,
+    MatTooltipModule,
+    
     ChartsModule
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'hu'}],

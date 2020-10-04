@@ -26,3 +26,9 @@ app-display-chart {
     width: 100%;
     position: relative;
 }
+
+
+.mat-select-value {
+    /* background-color: inherit; */
+    color: inherit;
+}

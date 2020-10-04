@@ -2,10 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { WebApiService } from 'src/app/services/web-api.service'
 import { ProcessResultService } from 'src/app/services/process-result.service'
 import { QueryDto } from 'src/app/types/query-dto'
+import { FIELDS } from 'src/app/constants/fields'
+import { COLORS } from 'src/app/constants/colors'
+import { ChartDataObject } from 'src/app/types/chart-data'
 
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
 import { MatDrawer } from '@angular/material/sidenav'
+import { MatExpansionPanel } from '@angular/material/expansion'
 
 @Component({
   selector: 'app-graph-manager',
@@ -14,65 +16,33 @@ import { MatDrawer } from '@angular/material/sidenav'
 })
 export class GraphManagerComponent {
 
+  title = 'covid-frontend'
+
   @ViewChild('drawer') drawerRef: MatDrawer
+  @ViewChild('fieldsSelectionList') fieldsSelectionListRef: MatExpansionPanel
+  @ViewChild('dateSelection') dateSelectionRef: MatExpansionPanel
 
   selectedGridId: string = null
   selectedColumnNumber: string = '1'
-  graphs: any[] = []
-
-  fields: any = {
-    "total_cases": "Összes eset",
-    "new_cases": "Új esetek",
-    "new_cases_smoothed": "Új esetek (mozgóátlag)",
-    "total_deaths": "Összes haláleset",
-    "new_deaths": "Új halálesetek",
-    "new_deaths_smoothed": "Új halálesetek (mozgóátlag)",
-    "total_cases_per_million": "Összes eset 1 millió lakosra",
-    "new_cases_per_million": "Új esetek 1 millió lakosra",
-    "new_cases_smoothed_per_million": "Új esetek (mozgóátlag) 1 millió lakosra",
-    "total_deaths_per_million": "Összes haláleset 1 millió lakosra",
-    "new_deaths_per_million": "Új halálesetek 1 millió lakosra",
-    "new_deaths_smoothed_per_million": "Új halálesetek (mozgóátlag) 1 millió lakosra",
-    "total_tests": "Összes teszt",
-    "new_tests": "Új tesztek",
-    "new_tests_smoothed": "Új tesztek (mozgóátlag)",
-    "total_tests_per_thousand": "Összes teszt ezer lakosra",
-    "new_tests_per_thousand": "Új tesztek ezer lakosra",
-    "new_tests_smoothed_per_thousand": "Új tesztek (moozgóátlag) ezer lakosra",
-    "tests_per_case": "Egy pozitív esetre jutó tesztek száma",
-    "positive_rate": "Pozitív tesztek aránya",
-    "tests_units": "Tesztelő egységek",
-  }
-  title = 'covid-frontend'
-
-  selectedFields: string[] = ['new_cases']
-
-  // fieldNames: string[] = []
-
-  lineChartData: ChartDataSets[] = []
-  lineChartLabels: Label[] = []
-  lineChartColors: Color[] = []
-
-  lineChartOptions: ChartOptions = {
-    responsive: true
-  }
-
-
-  lineChartLegend = true
-  lineChartPlugins = []
-  lineChartType = 'line'
-
+  graphs: ChartDataObject[] = []
+  
+  selectedFields: string[] = []
+  selectedColors: any = {}
+  
   fromDate: Date
   toDate: Date
-
+  
   mouseHoverMap: any = {}
+  
+  fields: any[]
+  colors: any[]
 
   constructor(
     private webApi: WebApiService,
     private processResult: ProcessResultService
   ) {
-    this.toDate = new Date()
-    this.fromDate = new Date(this.toDate.getTime() - (1000 * 60 * 60 * 24 * 30))
+    this.fields = FIELDS
+    this.colors = COLORS
   }
 
   get gridColumns() {
@@ -83,13 +53,22 @@ export class GraphManagerComponent {
     return Object.keys(this.fields)
   }
 
-  onMouseStatus(index: number, status: boolean) {
-    this.mouseHoverMap[index] = status
+  onSelectionChange(ev: any) {
+    this.selectedFields = Object.assign([], ev.source['_value'])
+    this.selectedFields.forEach(f => {
+      if (!this.selectedColors.hasOwnProperty(f)) {
+        let selectedColor = Object.assign({}, this.colors[0])
+        this.selectedColors[f] = selectedColor.rgbCode
+      }
+    })
   }
 
-  onGridClick(gridId: string) {
-    this.selectedGridId = gridId
-    this.drawerRef.open()
+  getFieldName(field: string) {
+    return this.fields[field]
+  }
+
+  onMouseStatus(index: number, status: boolean) {
+    this.mouseHoverMap[index] = status
   }
 
   onDateChange(event: any, field: string) {
@@ -103,7 +82,15 @@ export class GraphManagerComponent {
   }
 
   onEditGraph(index: number) {
-    console.log(index)
+    const graphData = this.graphs[index]
+    console.log(graphData)
+    this.selectedFields = graphData.query.fields
+    this.selectedColors = graphData.selectedColors
+    this.fromDate = graphData.query.from
+    this.toDate = graphData.query.to
+    this.fieldsSelectionListRef.close()
+    this.dateSelectionRef.open()
+    this.drawerRef.open()
   }
 
   onDeleteGraph(index: number) {
@@ -112,7 +99,25 @@ export class GraphManagerComponent {
     this.graphs = newGraphs
   }
 
+  onNewChartClick() {
+    this.drawerRef.open()
+  }
+
+  resetForm() {
+    this.selectedFields = []
+    this.selectedColors = {}
+    this.fromDate = null
+    this.toDate = null
+    this.fieldsSelectionListRef.close()
+    this.dateSelectionRef.open()
+  }
+
+  onDeleteForm() {
+    this.resetForm()
+  }
+
   onGoClick() {
+
     let selectedFields = Object.assign([], this.selectedFields)
     let query: QueryDto = {
       from: this.fromDate ? this.fromDate : "2020-03-01",
@@ -122,10 +127,11 @@ export class GraphManagerComponent {
     }
     this.webApi.queryWebApi(query)
     .then((result: any[]) => {
-      let processed = this.processResult.processResult(result, selectedFields)
+      let processed: ChartDataObject = this.processResult.processResult(result, query, this.selectedColors )
       let newGraphs = Object.assign([], this.graphs)
       newGraphs.push(processed)
       this.graphs = newGraphs
+      this.resetForm()
       this.drawerRef.close()
     })
     .catch(error => {
@@ -135,7 +141,8 @@ export class GraphManagerComponent {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      // this.drawerRef.open()
+      this.drawerRef.open()
+      this.dateSelectionRef.open()
     }, 0)    
   }
 

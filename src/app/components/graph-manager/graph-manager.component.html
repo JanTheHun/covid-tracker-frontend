@@ -1,34 +1,127 @@
 <mat-drawer-container class="example-container" autosize>
-  
+
   <mat-drawer #drawer class="sidenav" mode="side">
 
-    <mat-form-field class="form-full-width" appearance="fill">
-      <mat-label>Kezdődátum</mat-label>
-      <input matInput [matDatepicker]="fromPicker" (dateChange)="onDateChange($event, 'from')" [value]="fromDate">
-      <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-      <mat-datepicker #fromPicker></mat-datepicker>
-    </mat-form-field>
+    <div class="closeButtonLine">
+      <button type="button"
+            class="closeDrawerBtn"
+            mat-raised-button
+            (click)="drawer.close()"
+            matTooltip="Bezárás">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">close</mat-icon>
+      </button>
 
-    <mat-form-field class="form-full-width" appearance="fill">
-      <mat-label>Végdátum</mat-label>
-      <input matInput [matDatepicker]="toPicker" (dateChange)="onDateChange($event, 'to')" [value]="toDate">
-      <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-      <mat-datepicker #toPicker></mat-datepicker>
-    </mat-form-field>
-  
-    <mat-form-field class="form-full-width" appearance="fill">
-      <mat-label>Adatok</mat-label>
-      <mat-select multiple [(value)]="selectedFields">
-        <mat-option *ngFor="let field of fieldNames" [value]="field">{{fields[field]}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <button type="button"
+              class="deleteFormBtn"
+              mat-raised-button
+              (click)="onDeleteForm()"
+              matTooltip="Mezők törlése">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">delete</mat-icon>
+      </button>
+    
+    </div>
 
-    <button type="button" mat-button (click)="onGoClick()">
-      <mat-icon aria-hidden="false" aria-label="Example home icon">done</mat-icon>
-    </button>
-    <button type="button" mat-button (click)="drawer.close()">
-      <mat-icon aria-hidden="false" aria-label="Example home icon">highlight_off</mat-icon>
-    </button>
+    <!-- <mat-icon aria-hidden="false" aria-label="Example home icon">close</mat-icon> -->
+
+    <mat-accordion>
+
+      <mat-expansion-panel #dateSelection>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Időintervallum
+          </mat-panel-title>
+        <mat-panel-description>
+          <ng-container *ngIf="fromDate || toDate">
+            {{fromDate | date: 'yyyy-MM-dd'}} -> {{toDate | date: 'yyyy-MM-dd'}}
+          </ng-container>
+          <ng-container *ngIf="!(fromDate || toDate)">
+            Összes adat
+          </ng-container>
+        </mat-panel-description>
+
+        </mat-expansion-panel-header>
+
+
+        <mat-form-field class="form-half-width" appearance="fill">
+          <mat-label>Kezdődátum</mat-label>
+          <input matInput [matDatepicker]="fromPicker" (dateChange)="onDateChange($event, 'from')" [value]="fromDate">
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+    
+        <mat-form-field class="form-half-width" appearance="fill">
+          <mat-label>Végdátum</mat-label>
+          <input matInput [matDatepicker]="toPicker" (dateChange)="onDateChange($event, 'to')" [value]="toDate">
+          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    
+
+    <div *ngFor="let field of selectedFields">
+      {{fields[field]}}
+    </div>
+
+    <mat-accordion>
+
+      <mat-expansion-panel #fieldsSelectionList>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Adatfajták
+          </mat-panel-title>
+          <mat-panel-description>
+            <ng-container *ngIf="selectedFields.length">
+              Kiválasztva: {{selectedFields.length}}
+            </ng-container>
+            <ng-container *ngIf="selectedFields.length === 0">
+              Válasszon ki legalább egy adatot!
+            </ng-container>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-selection-list class="fieldsSelectionList" #fields (selectionChange)="onSelectionChange($event)">
+          <mat-list-option *ngFor="let field of fieldNames" [selected]="selectedFields.indexOf(field) >= 0" [value]="field" >{{getFieldName(field)}}</mat-list-option>
+        </mat-selection-list>
+
+        <mat-list>
+      
+          <ng-container>
+            <mat-list-item *ngFor="let field of selectedFields; let i = index;">
+    
+              <mat-label class="fieldName">{{getFieldName(field)}}</mat-label>
+    
+              <mat-select class="colorPicker" [(value)]="selectedColors[field]" [style.backgroundColor]="selectedColors[field]" [style.color]="selectedColors[field]">
+    
+                <mat-option class="colorHolder" *ngFor="let color of colors" [value]="color.rgbCode" [style.backgroundColor]="color.rgbCode" [style.color]="color.rgbCode">
+                  <span>{{color.name}}</span>
+                </mat-option>
+    
+              </mat-select>
+    
+              <mat-divider *ngIf="i < selectedFields.length - 1"></mat-divider>
+              
+            </mat-list-item>
+          </ng-container>
+    
+        </mat-list>
+
+      </mat-expansion-panel>
+      
+    </mat-accordion>
+
+    
+
+    <button type="button"
+            color="primary"
+            class="graphFinishedBtn"
+            (click)="onGoClick()"
+            mat-raised-button
+            [disabled]="selectedFields.length === 0"
+            matTooltip="Grafikon létrehozása">Grafikon hozzáadása</button>
+    
 
   </mat-drawer>
 
@@ -37,31 +130,60 @@
 
     <div class="graphManagerHeader">
   
-      <button type="button" class="newGraphButton" mat-button (click)="drawer.toggle()">
+      <button *ngIf="!drawer.opened"
+              color="primary"
+              type="button"
+              class="newGraphButton"
+              mat-raised-button
+              matTooltip="Grafikonszerkesztő megnyitása"
+              (click)="onNewChartClick()">
         <mat-icon aria-hidden="false" aria-label="Example home icon">playlist_add</mat-icon>
       </button>
     
-      <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [(value)]="selectedColumnNumber">
-        <mat-button-toggle [value]="'1'"><mat-icon aria-hidden="false" aria-label="Example home icon">view_headline</mat-icon></mat-button-toggle>
-        <mat-button-toggle [value]="'2'"><mat-icon aria-hidden="false" aria-label="Example home icon">border_all</mat-icon></mat-button-toggle>
-        <mat-button-toggle [value]="'3'"><mat-icon aria-hidden="false" aria-label="Example home icon">grid_on</mat-icon></mat-button-toggle>
+      <mat-button-toggle-group color="primary" name="fontStyle" aria-label="Font Style" [(value)]="selectedColumnNumber">
+
+        <mat-button-toggle [value]="'1'" matTooltip="Grafikonok egymás alatt">
+          <mat-icon aria-hidden="false" aria-label="Example home icon">view_headline</mat-icon>
+        </mat-button-toggle>
+
+        <mat-button-toggle [value]="'2'" matTooltip="Grafikonok két oszlopban">
+          <mat-icon aria-hidden="false" aria-label="Example home icon">border_all</mat-icon>
+        </mat-button-toggle>
+
+        <mat-button-toggle [value]="'3'" matTooltip="Grafikonok három oszlopban">
+          <mat-icon aria-hidden="false" aria-label="Example home icon">grid_on</mat-icon>
+        </mat-button-toggle>
+
       </mat-button-toggle-group>
     
     </div>
 
     <div class="gridListHolder">
 
-      <mat-grid-list [cols]="gridColumns" rowHeight="2:1">
+      <div class="emptyList" *ngIf="graphs.length === 0 && !drawer.opened">
+
+        <button type="button" color="primary" mat-raised-button (click)="drawer.toggle()" matTooltip="Grafikonszerkesztő megnyitása">Új grafikon</button>
+
+      </div>
+
+      <mat-grid-list [cols]="gridColumns" rowHeight="2:1" *ngIf="graphs.length">
 
         <mat-grid-tile *ngFor="let graph of graphs; let i = index;">
             <div class="displayArea" (mouseover)="onMouseStatus(i, true)" (mouseleave)="onMouseStatus(i, false)">
 
               <div class="graphButtons">
 
-                <button mat-button *ngIf="mouseHoverMap[i]" class="graphBtn" (click)="onDeleteGraph(i)">
+                <button mat-button
+                        *ngIf="mouseHoverMap[i]"
+                        class="graphBtn"
+                        (click)="onDeleteGraph(i)"
+                        matTooltip="Grafikon törlése">
                   <mat-icon aria-hidden="false" aria-label="Example home icon">delete</mat-icon>
                 </button>
-                <button mat-button *ngIf="mouseHoverMap[i]" class="graphBtn" (click)="onEditGraph(i)">
+                <button mat-button *ngIf="mouseHoverMap[i]"
+                        class="graphBtn"
+                        (click)="onEditGraph(i)"
+                        matTooltip="Grafikon megnyitása a szerkesztőben">
                   <mat-icon aria-hidden="false" aria-label="Example home icon">edit</mat-icon>
                 </button>
 

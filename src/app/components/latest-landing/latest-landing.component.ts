@@ -21,6 +21,10 @@ export class LatestLandingComponent implements OnInit {
   ngOnInit(): void {
 
     const selectedFields = ['new_cases', 'new_cases_smoothed']
+    const selectedColors: any = {
+      'new_cases': '#00f',
+      'new_cases_smoothed': '#f00'
+    }
     const query: QueryDto = {
       to: new Date(),
       from: new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 7)),
@@ -30,7 +34,7 @@ export class LatestLandingComponent implements OnInit {
     this.webApi.queryWebApi(query)
       .then((result: any[]) => {
         console.log(result)
-        this.processedChartData = this.processResult.processResult(result, selectedFields)
+        this.processedChartData = this.processResult.processResult(result, query, selectedColors )
       })
       .catch(error => {
         console.log('ERROR:', error)

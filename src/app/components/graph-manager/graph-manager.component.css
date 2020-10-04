@@ -1,13 +1,20 @@
 .form-full-width {
     width: 100%;
 }
+
+.form-half-width {
+    width: 50%;
+}
+
 .sidenav {
     max-width: 400px;
 }
+
 .graphManagerHeader {
     height: 70px;
     text-align: center;
 }
+
 .example-container {
     height: 100%;
 }
@@ -17,7 +24,6 @@
     position: relative;
     margin: 10px;
 }
-
 
 .graphButtons {
     position: absolute;
@@ -41,7 +47,9 @@
 }
 
 .newGraphButton {
-    float: left;
+    /* float: left; */
+    position: absolute;
+    left: 0px;
 }
 
 .gridListHolder {
@@ -52,3 +60,55 @@
 .example-sidenav-content {
     height: 100%;
 }
+
+.emptyList {
+    width: 100%;
+    /* height: 100%; */
+    text-align: center;
+    padding-top: calc(50% - 70px);
+}
+
+.fieldsSelectionList {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.colorPicker {
+    position: absolute;
+    right: 10px;
+    max-width: 25%;
+}
+
+.fieldName {
+    width: calc(75% - 10px);
+}
+
+.colorHolder {
+    height: 20px!important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.closeButtonLine {
+    height: 38px;
+}
+
+.closeDrawerBtn {
+    float: right;
+}
+
+.deleteFormBtn {
+    float: right;
+}
+
+.graphFinishedBtn {
+    margin-left: 20px;
+    margin-top: 20px;
+    width: 200px;
+}
+
+/* 
+.mat-select-value {
+    background-color: inherit;
+    color: inherit;
+} */
