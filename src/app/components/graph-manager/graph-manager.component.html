@@ -31,12 +31,12 @@
             Időintervallum
           </mat-panel-title>
         <mat-panel-description>
-          <ng-container *ngIf="fromDate || toDate">
-            {{fromDate | date: 'yyyy-MM-dd'}} -> {{toDate | date: 'yyyy-MM-dd'}}
+          <ng-container>
+            {{fromDate ? (fromDate | date: 'yyyy-MM-dd') : 'kezdetektől'}} -> {{toDate ? (toDate | date: 'yyyy-MM-dd') : 'mai napig'}}
           </ng-container>
-          <ng-container *ngIf="!(fromDate || toDate)">
+          <!-- <ng-container *ngIf="!(fromDate || toDate)">
             Összes adat
-          </ng-container>
+          </ng-container> -->
         </mat-panel-description>
 
         </mat-expansion-panel-header>
@@ -155,6 +155,8 @@
         </mat-button-toggle>
 
       </mat-button-toggle-group>
+      
+      <mat-slider min="40" max = "100" step="1" *ngIf="selectedColumnNumber === '1'" [(ngModel)]="singleColumnWidth"></mat-slider>
     
     </div>
 
@@ -166,10 +168,14 @@
 
       </div>
 
-      <mat-grid-list [cols]="gridColumns" rowHeight="2:1" *ngIf="graphs.length">
+      <mat-grid-list [cols]="gridColumns" [rowHeight]="rowHeightString" *ngIf="graphs.length">
 
         <mat-grid-tile *ngFor="let graph of graphs; let i = index;">
-            <div class="displayArea" (mouseover)="onMouseStatus(i, true)" (mouseleave)="onMouseStatus(i, false)">
+            <div [style.width.%]="selectedColumnNumber === '1' ? singleColumnWidth : 100"
+                  [style.height.%]="selectedColumnNumber === '1' ? singleColumnWidth : 100"
+                  class="displayArea"
+                  (mouseover)="onMouseStatus(i, true)"
+                  (mouseleave)="onMouseStatus(i, false)">
 
               <div class="graphButtons">
 

@@ -21,8 +21,10 @@
 
 .displayArea {
     width: 100%;
-    position: relative;
-    margin: 10px;
+    position: absolute;
+    top: -2px;
+    left: 0px;
+    /* margin: 10px; */
 }
 
 .graphButtons {
@@ -49,7 +51,8 @@
 .newGraphButton {
     /* float: left; */
     position: absolute;
-    left: 0px;
+    left: 10px;
+    top: 10px;
 }
 
 .gridListHolder {
@@ -106,9 +109,3 @@
     margin-top: 20px;
     width: 200px;
 }
-
-/* 
-.mat-select-value {
-    background-color: inherit;
-    color: inherit;
-} */

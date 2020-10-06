@@ -24,7 +24,10 @@ export class GraphManagerComponent {
 
   selectedGridId: string = null
   selectedColumnNumber: string = '1'
+  singleColumnWidth: number = 50
   graphs: ChartDataObject[] = []
+
+  // rowHeightString: string = '2:1'
   
   selectedFields: string[] = []
   selectedColors: any = {}
@@ -51,6 +54,11 @@ export class GraphManagerComponent {
 
   get fieldNames() {
     return Object.keys(this.fields)
+  }
+
+  get rowHeightString() {
+    let rowHeightRatio = this.selectedColumnNumber === '1' ? Math.pow((100 / this.singleColumnWidth), 1.5) + 1 : 2
+    return `${rowHeightRatio}:1`
   }
 
   onSelectionChange(ev: any) {
@@ -109,7 +117,7 @@ export class GraphManagerComponent {
     this.fromDate = null
     this.toDate = null
     this.fieldsSelectionListRef.close()
-    this.dateSelectionRef.open()
+    this.dateSelectionRef.close()
   }
 
   onDeleteForm() {
@@ -142,7 +150,7 @@ export class GraphManagerComponent {
   ngAfterViewInit() {
     setTimeout(() => {
       this.drawerRef.open()
-      this.dateSelectionRef.open()
+      // this.dateSelectionRef.open()
     }, 0)    
   }
 

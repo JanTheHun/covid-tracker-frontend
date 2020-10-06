@@ -12,6 +12,7 @@ import { ChartDataObject } from 'src/app/types/chart-data'
 export class LatestLandingComponent implements OnInit {
 
   processedChartData: ChartDataObject
+  latestData: any
 
   constructor(
     private webApi: WebApiService,
@@ -33,8 +34,15 @@ export class LatestLandingComponent implements OnInit {
     }
     this.webApi.queryWebApi(query)
       .then((result: any[]) => {
-        console.log(result)
         this.processedChartData = this.processResult.processResult(result, query, selectedColors )
+      })
+      .catch(error => {
+        console.log('ERROR:', error)
+      })
+    this.webApi.getLatestData()
+      .then((result: any[]) => {
+        // console.log(result)
+        this.latestData = result
       })
       .catch(error => {
         console.log('ERROR:', error)
