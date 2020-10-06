@@ -63,12 +63,14 @@ export class GraphManagerComponent {
 
   onSelectionChange(ev: any) {
     this.selectedFields = Object.assign([], ev.source['_value'])
+    let newSelectedColors: any = {}
     this.selectedFields.forEach(f => {
+      let selectedColor = Object.assign({}, this.colors[0])
       if (!this.selectedColors.hasOwnProperty(f)) {
-        let selectedColor = Object.assign({}, this.colors[0])
-        this.selectedColors[f] = selectedColor.rgbCode
+        newSelectedColors[f] = selectedColor.rgbCode
       }
     })
+    this.selectedColors = newSelectedColors
   }
 
   getFieldName(field: string) {
