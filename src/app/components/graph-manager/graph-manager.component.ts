@@ -5,6 +5,7 @@ import { QueryDto } from 'src/app/types/query-dto'
 import { FIELDS } from 'src/app/constants/fields'
 import { COLORS } from 'src/app/constants/colors'
 import { ChartDataObject } from 'src/app/types/chart-data'
+import { ModalService } from 'src/app/services/modal.service'
 
 import { MatDrawer } from '@angular/material/sidenav'
 import { MatExpansionPanel } from '@angular/material/expansion'
@@ -16,7 +17,7 @@ import { MatExpansionPanel } from '@angular/material/expansion'
 })
 export class GraphManagerComponent {
 
-  title = 'covid-frontend'
+  title = 'CovidTracker'
 
   @ViewChild('drawer') drawerRef: MatDrawer
   @ViewChild('fieldsSelectionList') fieldsSelectionListRef: MatExpansionPanel
@@ -24,7 +25,7 @@ export class GraphManagerComponent {
 
   selectedGridId: string = null
   selectedColumnNumber: string = '1'
-  singleColumnWidth: number = 50
+  singleColumnWidth: number = 100
   graphs: ChartDataObject[] = []
 
   // rowHeightString: string = '2:1'
@@ -42,7 +43,8 @@ export class GraphManagerComponent {
 
   constructor(
     private webApi: WebApiService,
-    private processResult: ProcessResultService
+    private processResult: ProcessResultService,
+    private modalService: ModalService
   ) {
     this.fields = FIELDS
     this.colors = COLORS
@@ -146,6 +148,7 @@ export class GraphManagerComponent {
     })
     .catch(error => {
       console.log('ERROR:', error)
+      this.modalService.openErrorDialog('Nem sikerült a grafikon adatainak betöltése')
     })
   }
 

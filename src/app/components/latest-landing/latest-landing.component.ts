@@ -3,6 +3,7 @@ import { WebApiService } from 'src/app/services/web-api.service'
 import { QueryDto } from 'src/app/types/query-dto'
 import { ProcessResultService } from 'src/app/services/process-result.service'
 import { ChartDataObject } from 'src/app/types/chart-data'
+import { ModalService } from 'src/app/services/modal.service'
 
 @Component({
   selector: 'app-latest-landing',
@@ -16,7 +17,8 @@ export class LatestLandingComponent implements OnInit {
 
   constructor(
     private webApi: WebApiService,
-    private processResult: ProcessResultService
+    private processResult: ProcessResultService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
@@ -32,21 +34,18 @@ export class LatestLandingComponent implements OnInit {
       fields: selectedFields,
       countries: ["HUN"]
     }
-    this.webApi.queryWebApi(query)
+    Promise.all([
+      this.webApi.queryWebApi(query),
+      this.webApi.getLatestData()
+    ])
       .then((result: any[]) => {
-        this.processedChartData = this.processResult.processResult(result, query, selectedColors )
+        this.processedChartData = this.processResult.processResult(result[0], query, selectedColors )
+        this.latestData = result[1]
       })
       .catch(error => {
-        console.log('ERROR:', error)
+        this.modalService.openErrorDialog('Nem sikerült a legfrissebb adatok betöltése')
       })
-    this.webApi.getLatestData()
-      .then((result: any[]) => {
-        // console.log(result)
-        this.latestData = result
-      })
-      .catch(error => {
-        console.log('ERROR:', error)
-      })
+
   }
 
 }

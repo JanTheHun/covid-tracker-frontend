@@ -21,6 +21,7 @@ export class WebApiService {
       this.http.get(this.webApiURL.concat('/latest')).subscribe(result => {
         resolve(result)
       }, error => {
+        console.log(error)
         reject(`error calling web API: ${error}`)
       })
     })
@@ -31,6 +32,7 @@ export class WebApiService {
       this.http.post(this.webApiURL.concat('/query'), queryObj).subscribe(result => {
         resolve(result)
       }, error => {
+        console.log(error)
         reject(`error calling web API: ${error}`)
       })
     })

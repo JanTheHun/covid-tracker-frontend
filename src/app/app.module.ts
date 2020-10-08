@@ -21,12 +21,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { ChartsModule } from 'ng2-charts';
 import { GraphManagerComponent } from './components/graph-manager/graph-manager.component';
 import { LatestLandingComponent } from './components/latest-landing/latest-landing.component';
 import { DisplayChartComponent } from './components/display-chart/display-chart.component';
 import { LatestDetailsComponent } from './components/latest-details/latest-details.component';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { LatestDetailsComponent } from './components/latest-details/latest-detai
     GraphManagerComponent,
     LatestLandingComponent,
     DisplayChartComponent,
-    LatestDetailsComponent
+    LatestDetailsComponent,
+    ErrorDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,8 @@ import { LatestDetailsComponent } from './components/latest-details/latest-detai
     MatToolbarModule,
     MatChipsModule,
     MatSliderModule,
-
+    MatDialogModule,
+    
     ChartsModule
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'hu'}],
