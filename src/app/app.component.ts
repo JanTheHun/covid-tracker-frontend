@@ -7,6 +7,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
+  selectedIndex: number = null
+
   constructor( ) { }
 
+  switchToCharts() {
+    this.selectedIndex = 1
+  }
 }

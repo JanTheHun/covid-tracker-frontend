@@ -5,15 +5,11 @@
     </mat-toolbar-row>
 
     <mat-toolbar-row>
+        
         <mat-chip-list aria-label="Adatok">
             <mat-chip *ngFor="let field of detailsToShow">{{fields[field]}}: {{data[field] | number}}</mat-chip>
-            <!-- <mat-chip>Új esetek: {{data.new_cases | number}}</mat-chip>
-            <mat-chip>Új esetek (mozgóátlag): {{data.new_cases_smoothed | number}}</mat-chip>
-            <mat-chip>Új halálesetek: {{data.new_deaths | number}}</mat-chip> -->
         </mat-chip-list>
           
-        <!-- <span class="detail">Új esetek: {{data.new_cases}}</span>
-        <span>Új halálesetek: {{data.new_deaths}}</span> -->
     </mat-toolbar-row>
 
 </mat-toolbar>

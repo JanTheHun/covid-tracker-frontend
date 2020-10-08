@@ -1,14 +1,16 @@
 .latestDetails {
     height: 200px;
     overflow: auto;
-    /* background-color: khaki; */
 }
 
 .latestChart {
-    /* height: calc(100% - 375px);
-    position: relative;
-    top: -11px; */
     max-height: calc(100% - 200px);
     overflow-y: auto;
     max-width: 800px;
+}
+
+.customChartBtn {
+    position: absolute;
+    left: 800px;
+    top: 400px;
 }

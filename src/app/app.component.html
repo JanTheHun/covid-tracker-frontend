@@ -2,7 +2,7 @@
   <span>COVID-19 figyelő</span>
 </mat-toolbar>
 
-<mat-tab-group class="mainAppArea">
-  <mat-tab label="Legfrissebb adatok"><app-latest-landing></app-latest-landing>  </mat-tab>
+<mat-tab-group class="mainAppArea" #tabGroup [(selectedIndex)]="selectedIndex">
+  <mat-tab label="Legfrissebb adatok"><app-latest-landing (newchartclick)="switchToCharts()"></app-latest-landing>  </mat-tab>
   <mat-tab label="Grafikonszerkesztő"><app-graph-manager></app-graph-manager> </mat-tab>
 </mat-tab-group>

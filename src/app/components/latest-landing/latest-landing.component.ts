@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { WebApiService } from 'src/app/services/web-api.service'
 import { QueryDto } from 'src/app/types/query-dto'
 import { ProcessResultService } from 'src/app/services/process-result.service'
@@ -12,6 +12,8 @@ import { ModalService } from 'src/app/services/modal.service'
 })
 export class LatestLandingComponent implements OnInit {
 
+  @Output() newchartclick = new EventEmitter()
+
   processedChartData: ChartDataObject
   latestData: any
 
@@ -20,6 +22,10 @@ export class LatestLandingComponent implements OnInit {
     private processResult: ProcessResultService,
     private modalService: ModalService
   ) { }
+
+  onNewChartClick() {
+    this.newchartclick.emit()
+  }
 
   ngOnInit(): void {
 
