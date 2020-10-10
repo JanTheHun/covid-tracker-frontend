@@ -63,16 +63,24 @@ export class GraphManagerComponent {
     return `${rowHeightRatio}:1`
   }
 
+  allocateColorToFields() {
+    for(let field of this.selectedFields) {
+      if (!this.selectedColors[field]) {
+        let unusedColors = this.colors.filter(c => {
+          return Object.values(this.selectedColors).indexOf(c.rgbCode) === -1
+        })
+        if (unusedColors.length) {
+          this.selectedColors[field] = unusedColors[0].rgbCode
+        } else {
+          this.selectedColors[field] = this.colors[0].rgbCode
+        }
+      }
+    }
+  }
+
   onSelectionChange(ev: any) {
     this.selectedFields = Object.assign([], ev.source['_value'])
-    let newSelectedColors: any = {}
-    this.selectedFields.forEach(f => {
-      let selectedColor = Object.assign({}, this.colors[0])
-      if (!this.selectedColors.hasOwnProperty(f)) {
-        newSelectedColors[f] = selectedColor.rgbCode
-      }
-    })
-    this.selectedColors = newSelectedColors
+    this.allocateColorToFields()
   }
 
   getFieldName(field: string) {
