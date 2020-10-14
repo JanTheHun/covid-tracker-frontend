@@ -93,10 +93,17 @@
     
               <mat-label class="fieldName">{{getFieldName(field)}}</mat-label>
     
-              <mat-select class="colorPicker" [(value)]="selectedColors[field]" [style.backgroundColor]="selectedColors[field]" [style.color]="selectedColors[field]">
+              <mat-select class="colorPicker"
+                          [(value)]="selectedColors[field]"
+                          [style.backgroundColor]="selectedColors[field]"
+                          [style.color]="selectedColors[field]">
     
-                <mat-option class="colorHolder" *ngFor="let color of colors" [value]="color.rgbCode" [style.backgroundColor]="color.rgbCode" [style.color]="color.rgbCode">
-                  <span>{{color.name}}</span>
+                <mat-option *ngFor="let color of colors"
+                            class="colorHolder"
+                            [value]="color.rgbCode"
+                            [style.backgroundColor]="color.rgbCode"
+                            [style.color]="color.rgbCode">
+                  <!-- <span>{{color.name}}</span> -->
                 </mat-option>
     
               </mat-select>
@@ -155,8 +162,15 @@
         </mat-button-toggle>
 
       </mat-button-toggle-group>
-      
-      <mat-slider min="40" max = "100" step="1" *ngIf="selectedColumnNumber === '1'" [(ngModel)]="singleColumnWidth"></mat-slider>
+      <div>
+        <mat-slider id="singleColumnWidthSlider"
+                    color="primary"
+                    *ngIf="selectedColumnNumber === '1'"
+                    min="40"
+                    max = "100"
+                    step="1"
+                    [(ngModel)]="singleColumnWidth"></mat-slider>
+      </div>
     
     </div>
 

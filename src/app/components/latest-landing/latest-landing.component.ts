@@ -57,8 +57,13 @@ export class LatestLandingComponent implements OnInit {
       this.webApi.getLatestData()
     ])
       .then((result: any[]) => {
-        this.processedChartData = this.processResult.processResult(result[0], query, selectedColors )
-        this.latestData = result[1]
+        if (result[0].success === false || result[1].success === false) {
+          this.modalService.openErrorDialog('Kommunikációs hiba a szerverrel, próbálja újra kicsit később!')  
+        } else {
+          this.processedChartData = this.processResult.processResult(result[0], query, selectedColors )
+          this.latestData = result[1]
+        }
+
       })
       .catch(error => {
         this.modalService.openErrorDialog('Nem sikerült a legfrissebb adatok betöltése')

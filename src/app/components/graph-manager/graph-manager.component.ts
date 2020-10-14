@@ -146,13 +146,17 @@ export class GraphManagerComponent {
       countries: ["HUN"]
     }
     this.webApi.queryWebApi(query)
-    .then((result: any[]) => {
-      let processed: ChartDataObject = this.processResult.processResult(result, query, this.selectedColors )
-      let newGraphs = Object.assign([], this.graphs)
-      newGraphs.push(processed)
-      this.graphs = newGraphs
-      this.resetForm()
-      this.drawerRef.close()
+    .then((result: any | { success: boolean }) => {
+      if (result.success === false) {
+        this.modalService.openErrorDialog('Kommunikációs hiba a szerverrel, próbálja újra kicsit később!')
+      } else {
+        let processed: ChartDataObject = this.processResult.processResult(result, query, this.selectedColors )
+        let newGraphs = Object.assign([], this.graphs)
+        newGraphs.push(processed)
+        this.graphs = newGraphs
+        this.resetForm()
+        this.drawerRef.close()
+      }
     })
     .catch(error => {
       console.log('ERROR:', error)
