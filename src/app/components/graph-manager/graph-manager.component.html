@@ -21,8 +21,6 @@
     
     </div>
 
-    <!-- <mat-icon aria-hidden="false" aria-label="Example home icon">close</mat-icon> -->
-
     <mat-accordion>
 
       <mat-expansion-panel #dateSelection>
@@ -34,9 +32,6 @@
           <ng-container>
             {{fromDate ? (fromDate | date: 'yyyy-MM-dd') : 'kezdetektől'}} -> {{toDate ? (toDate | date: 'yyyy-MM-dd') : 'mai napig'}}
           </ng-container>
-          <!-- <ng-container *ngIf="!(fromDate || toDate)">
-            Összes adat
-          </ng-container> -->
         </mat-panel-description>
 
         </mat-expansion-panel-header>
@@ -57,15 +52,9 @@
         </mat-form-field>
 
         </mat-expansion-panel>
-    </mat-accordion>
+    <!-- </mat-accordion>
 
-    
-
-    <div *ngFor="let field of selectedFields">
-      {{fields[field]}}
-    </div>
-
-    <mat-accordion>
+    <mat-accordion> -->
 
       <mat-expansion-panel #fieldsSelectionList>
         <mat-expansion-panel-header>
@@ -83,7 +72,9 @@
         </mat-expansion-panel-header>
 
         <mat-selection-list class="fieldsSelectionList" #fields (selectionChange)="onSelectionChange($event)">
-          <mat-list-option *ngFor="let field of fieldNames" [selected]="selectedFields.indexOf(field) >= 0" [value]="field" >{{getFieldName(field)}}</mat-list-option>
+          <mat-list-option *ngFor="let field of fieldNames"
+                            [selected]="selectedFields.indexOf(field) >= 0"
+                            [value]="field" >{{getFieldName(field)}}</mat-list-option>
         </mat-selection-list>
 
         <mat-list>
@@ -103,7 +94,6 @@
                             [value]="color.rgbCode"
                             [style.backgroundColor]="color.rgbCode"
                             [style.color]="color.rgbCode">
-                  <!-- <span>{{color.name}}</span> -->
                 </mat-option>
     
               </mat-select>
@@ -114,6 +104,31 @@
           </ng-container>
     
         </mat-list>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Ország
+          </mat-panel-title>
+          <mat-panel-description>
+            <ng-container *ngIf="selectedCountry">
+              Kiválasztva: {{selectedCountry}}
+            </ng-container>
+            <ng-container *ngIf="!selectedCountry">
+              Válasszon ki egy országot!
+            </ng-container>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+          <mat-select class="countryPicker"
+                            [(value)]="selectedCountry">
+      
+            <mat-option *ngFor="let country of countries"
+                        [value]="country">{{country}}</mat-option>
+
+          </mat-select>
 
       </mat-expansion-panel>
       
@@ -144,24 +159,25 @@
               mat-raised-button
               matTooltip="Grafikonszerkesztő megnyitása"
               (click)="onNewChartClick()">
-        <mat-icon aria-hidden="false" aria-label="Example home icon">playlist_add</mat-icon>
+        <mat-icon>playlist_add</mat-icon>
       </button>
     
-      <mat-button-toggle-group color="primary" name="fontStyle" aria-label="Font Style" [(value)]="selectedColumnNumber">
+      <mat-button-toggle-group color="primary" [(value)]="selectedColumnNumber">
 
         <mat-button-toggle [value]="'1'" matTooltip="Grafikonok egymás alatt">
-          <mat-icon aria-hidden="false" aria-label="Example home icon">view_headline</mat-icon>
+          <mat-icon>view_headline</mat-icon>
         </mat-button-toggle>
 
         <mat-button-toggle [value]="'2'" matTooltip="Grafikonok két oszlopban">
-          <mat-icon aria-hidden="false" aria-label="Example home icon">border_all</mat-icon>
+          <mat-icon>border_all</mat-icon>
         </mat-button-toggle>
 
         <mat-button-toggle [value]="'3'" matTooltip="Grafikonok három oszlopban">
-          <mat-icon aria-hidden="false" aria-label="Example home icon">grid_on</mat-icon>
+          <mat-icon>grid_on</mat-icon>
         </mat-button-toggle>
 
       </mat-button-toggle-group>
+      
       <div>
         <mat-slider id="singleColumnWidthSlider"
                     color="primary"
@@ -178,7 +194,11 @@
 
       <div class="emptyList" *ngIf="graphs.length === 0 && !drawer.opened">
 
-        <button type="button" color="primary" mat-raised-button (click)="drawer.toggle()" matTooltip="Grafikonszerkesztő megnyitása">Új grafikon</button>
+        <button type="button"
+                mat-raised-button
+                color="primary"
+                (click)="drawer.toggle()"
+                matTooltip="Grafikonszerkesztő megnyitása">Új grafikon</button>
 
       </div>
 

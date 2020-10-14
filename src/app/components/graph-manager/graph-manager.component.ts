@@ -4,6 +4,7 @@ import { ProcessResultService } from 'src/app/services/process-result.service'
 import { QueryDto } from 'src/app/types/query-dto'
 import { FIELDS } from 'src/app/constants/fields'
 import { COLORS } from 'src/app/constants/colors'
+import { COUNTRIES } from 'src/app/constants/countries'
 import { ChartDataObject } from 'src/app/types/chart-data'
 import { ModalService } from 'src/app/services/modal.service'
 
@@ -27,9 +28,8 @@ export class GraphManagerComponent {
   selectedColumnNumber: string = '1'
   singleColumnWidth: number = 100
   graphs: ChartDataObject[] = []
-
-  // rowHeightString: string = '2:1'
   
+  selectedCountry: string = null
   selectedFields: string[] = []
   selectedColors: any = {}
   
@@ -40,6 +40,7 @@ export class GraphManagerComponent {
   
   fields: any[]
   colors: any[]
+  countries: any[] = []
 
   constructor(
     private webApi: WebApiService,
@@ -48,6 +49,7 @@ export class GraphManagerComponent {
   ) {
     this.fields = FIELDS
     this.colors = COLORS
+    this.countries = COUNTRIES
   }
 
   get gridColumns() {
