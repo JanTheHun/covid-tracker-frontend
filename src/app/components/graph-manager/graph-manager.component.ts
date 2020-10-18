@@ -4,7 +4,6 @@ import { ProcessResultService } from 'src/app/services/process-result.service'
 import { QueryDto } from 'src/app/types/query-dto'
 import { FIELDS } from 'src/app/constants/fields'
 import { COLORS } from 'src/app/constants/colors'
-import { COUNTRIES } from 'src/app/constants/countries'
 import { ChartDataObject } from 'src/app/types/chart-data'
 import { ModalService } from 'src/app/services/modal.service'
 
@@ -71,7 +70,6 @@ export class GraphManagerComponent {
   ) {
     this.colors = COLORS
     this.fields = FIELDS
-    // this.countries = COUNTRIES
     this.selectedCountry = this.countries[0]
   }
 

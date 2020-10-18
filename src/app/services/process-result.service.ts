@@ -21,39 +21,6 @@ export class ProcessResultService {
     this.fields = FIELDS
   }
 
-  processResult(result: any[], query: any, selectedColors: any ): ChartDataObject {
-
-    let newLabels: Label[] = result.map( r => { return r['date'] })
-    let newLineChartData: ChartDataSets[] = []
-    let newLineChartColors: Color[] = []
-    
-    query.fields.map(f => {
-      let newCases = result.map( r => { return r[f] })  
-      newLineChartData.push({
-        data: newCases,
-        label: this.fields[f],
-        fill: false
-      })
-      newLineChartColors.push({
-        backgroundColor: selectedColors[f],
-        borderColor: selectedColors[f],
-        borderWidth: 1,
-        pointRadius: 2
-      })
-    })
-    return {
-      lineChartData: newLineChartData,
-      lineChartColors: newLineChartColors,
-      lineChartLabels: newLabels,
-      lineChartOptions: this.lineChartOptions,
-      lineChartLegend: this.lineChartLegend,
-      lineChartType: this.lineChartType,
-      lineChartPlugins: this.lineChartPlugins,
-      selectedColors,
-      query
-    }
-  }
-
   processResultWithCountries(result: any[], query: any, queryFields: any[] ): ChartDataObject {
     // console.log(query)
     let newLabels: Label[] = Array.from(new Set(result.map( r => { return r['date'] })))

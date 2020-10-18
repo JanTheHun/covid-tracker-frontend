@@ -4,7 +4,6 @@ import { QueryDto } from 'src/app/types/query-dto'
 import { ProcessResultService } from 'src/app/services/process-result.service'
 import { ChartDataObject } from 'src/app/types/chart-data'
 import { ModalService } from 'src/app/services/modal.service'
-import { DictionaryService } from 'src/app/services/dictionary.service'
 
 @Component({
   selector: 'app-latest-landing',
@@ -37,26 +36,16 @@ export class LatestLandingComponent implements OnInit {
 
   countries: string[] = []
 
-  // dictionary
-
   constructor(
     private webApi: WebApiService,
     private processResult: ProcessResultService,
-    private modalService: ModalService,
-    // private dictionaryService: DictionaryService
+    private modalService: ModalService
   ) {
-    // this.dictionary = dictionaryService.dictionary
-    // console.log(this.dictionary)
   }
 
   onNewChartClick() {
     this.newchartclick.emit()
   }
-
-  // onLangChange() {
-  //   this.dictionaryService.setLanguage('en')
-  //   console.log(this.dictionary)
-  // }
 
   getLatestData() {
 
