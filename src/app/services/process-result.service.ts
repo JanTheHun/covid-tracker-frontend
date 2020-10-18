@@ -35,8 +35,10 @@ export class ProcessResultService {
         fill: false
       })
       newLineChartColors.push({
-        backgroundColor: selectedColors[f].rgbCode,
+        backgroundColor: selectedColors[f],
         borderColor: selectedColors[f],
+        borderWidth: 1,
+        pointRadius: 2
       })
     })
     return {
@@ -50,6 +52,74 @@ export class ProcessResultService {
       selectedColors,
       query
     }
+  }
+
+  processResultWithCountries(result: any[], query: any, queryFields: any[] ): ChartDataObject {
+    // console.log(query)
+    let newLabels: Label[] = Array.from(new Set(result.map( r => { return r['date'] })))
+    let newLineChartData: ChartDataSets[] = []
+    let newLineChartColors: Color[] = []
+    
+    let labelMode: string
+    if (query.fields.length === 1 && query.countries.length > 1) {
+      labelMode = 'singleField'
+    } else if (query.fields.length > 1 && query.countries.length === 1) {
+      labelMode = 'singleCountry'
+    } else {
+      labelMode = 'multiple'
+    }
+    labelMode = 'multiple'
+
+    query.countries.forEach(country => {
+      // console.log('country:', country)
+      let newDataset = result.filter( r => { return r.iso_code === country })
+      // console.log('new data set:', newDataset)
+      let fields: any[] = queryFields.filter(q => { return q.country === country })
+
+      fields.forEach(field => {
+        let datasetToInsert: ChartDataSets[] = []
+        // console.log('field:', field)
+        let chartLabel: string
+        if (labelMode === 'singleField') {
+          chartLabel = country
+        } else if (labelMode === 'singleCountry') {
+          chartLabel = this.fields[field.field]
+        } else {
+          chartLabel = `${this.fields[field.field]}, ${country}`
+        }
+        console.log('label:', chartLabel)
+        let chartDataSet = newDataset.map(d=> {return d[field.field]})
+        datasetToInsert.push({
+          data: chartDataSet,
+          label: chartLabel,
+          fill: false
+        })
+        console.log('inserted:', datasetToInsert)
+        newLineChartColors.push({
+          backgroundColor: field.color,
+          borderColor: field.color,
+          borderWidth: 1,
+          pointRadius: 2
+        })
+        newLineChartData = newLineChartData.concat(datasetToInsert)
+      })
+    })
+
+    console.log('line chart data:', newLineChartData)
+
+    let returnObj = {
+      lineChartData: newLineChartData,
+      lineChartColors: newLineChartColors,
+      lineChartLabels: newLabels,
+      lineChartOptions: this.lineChartOptions,
+      lineChartLegend: this.lineChartLegend,
+      lineChartType: this.lineChartType,
+      lineChartPlugins: this.lineChartPlugins,
+      query, 
+      queryFields: Object.assign([], queryFields)
+    }
+    console.log('return:', returnObj)
+    return  returnObj
   }
 
 }

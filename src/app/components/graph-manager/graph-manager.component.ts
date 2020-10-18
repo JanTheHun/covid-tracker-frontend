@@ -21,7 +21,7 @@ export class GraphManagerComponent {
   title = 'CovidTracker'
 
   @ViewChild('drawer') drawerRef: MatDrawer
-  @ViewChild('fieldsSelectionList') fieldsSelectionListRef: MatExpansionPanel
+  @ViewChild('detailsSelectionPanel') fieldsSelectionListRef: MatExpansionPanel
   @ViewChild('dateSelection') dateSelectionRef: MatExpansionPanel
 
   selectedGridId: string = null
@@ -29,9 +29,14 @@ export class GraphManagerComponent {
   singleColumnWidth: number = 100
   graphs: ChartDataObject[] = []
   
-  selectedCountry: string = null
   selectedFields: string[] = []
   selectedColors: any = {}
+  
+  selectedCountry: string = null
+  selectedFieldName: string = null
+  selectedColor: string = null
+
+  queryFields: any[] = []
   
   fromDate: Date
   toDate: Date
@@ -50,6 +55,7 @@ export class GraphManagerComponent {
     this.fields = FIELDS
     this.colors = COLORS
     this.countries = COUNTRIES
+    this.selectedCountry = this.countries[0]
   }
 
   get gridColumns() {
@@ -65,16 +71,20 @@ export class GraphManagerComponent {
     return `${rowHeightRatio}:1`
   }
 
+  get formInValid() {
+    return (this.queryFields.length === 0)
+  }
+
   allocateColorToFields() {
     for(let field of this.selectedFields) {
       if (!this.selectedColors[field]) {
         let unusedColors = this.colors.filter(c => {
-          return Object.values(this.selectedColors).indexOf(c.rgbCode) === -1
+          return Object.values(this.selectedColors).indexOf(c) === -1
         })
         if (unusedColors.length) {
-          this.selectedColors[field] = unusedColors[0].rgbCode
+          this.selectedColors[field] = unusedColors[0]
         } else {
-          this.selectedColors[field] = this.colors[0].rgbCode
+          this.selectedColors[field] = this.colors[0]
         }
       }
     }
@@ -104,14 +114,11 @@ export class GraphManagerComponent {
   }
 
   onEditGraph(index: number) {
-    const graphData = this.graphs[index]
+    const graphData = Object.assign([], this.graphs[index])
     console.log(graphData)
-    this.selectedFields = graphData.query.fields
-    this.selectedColors = graphData.selectedColors
+    this.queryFields = Object.assign([], graphData.queryFields)
     this.fromDate = graphData.query.from
     this.toDate = graphData.query.to
-    this.fieldsSelectionListRef.close()
-    this.dateSelectionRef.open()
     this.drawerRef.open()
   }
 
@@ -126,36 +133,65 @@ export class GraphManagerComponent {
   }
 
   resetForm() {
-    this.selectedFields = []
-    this.selectedColors = {}
+    this.queryFields = []
+    this.selectedFieldName = ''
+    this.selectedCountry = this.countries[0]
+    this.selectedColor = ''
     this.fromDate = null
     this.toDate = null
     this.fieldsSelectionListRef.close()
     this.dateSelectionRef.close()
   }
 
+  onDeleteDetailClick(index: number) {
+    console.log(index)
+    const newQueryFields = Object.assign([], this.queryFields)
+    newQueryFields.splice(index, 1)
+    this.queryFields = newQueryFields
+  }
+
   onDeleteForm() {
     this.resetForm()
   }
 
+  onAddDetailsClick() {
+    console.log(this.selectedFieldName)
+    console.log(this.selectedCountry)
+    console.log(this.selectedColor)
+
+    let newField = {
+      field: this.selectedFieldName,
+      country: this.selectedCountry,
+      color: this.selectedColor
+    }
+    this.queryFields.push(newField)
+  }
+
   onGoClick() {
 
-    let selectedFields = Object.assign([], this.selectedFields)
+    const currentQueryFields = Object.assign([], this.queryFields)
+
+    let selectedFields: string[] = Array.from(new Set(currentQueryFields.map(q=> { return q.field })))
+    let selectedCountries: string[] = Array.from(new Set(currentQueryFields.map(q=> { return q.country })))
+    console.log('saved queryFields:', this.queryFields)
     let query: QueryDto = {
       from: this.fromDate ? this.fromDate : "2020-03-01",
       to: this.toDate ? this.toDate : new Date(),
       fields: selectedFields,
-      countries: ["HUN"]
+      countries: selectedCountries
     }
+    console.log('graphs 1: ', this.graphs)
     this.webApi.queryWebApi(query)
     .then((result: any | { success: boolean }) => {
       if (result.success === false) {
         this.modalService.openErrorDialog('Kommunikációs hiba a szerverrel, próbálja újra kicsit később!')
       } else {
-        let processed: ChartDataObject = this.processResult.processResult(result, query, this.selectedColors )
+        let processed: ChartDataObject = this.processResult.processResultWithCountries(result, query, currentQueryFields )
+        console.log('processed: ', processed)
         let newGraphs = Object.assign([], this.graphs)
         newGraphs.push(processed)
         this.graphs = newGraphs
+        console.log('graphs 2: ', this.graphs)
         this.resetForm()
         this.drawerRef.close()
       }

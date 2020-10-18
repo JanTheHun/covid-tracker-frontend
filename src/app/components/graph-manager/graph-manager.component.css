@@ -7,7 +7,7 @@
 }
 
 .sidenav {
-    max-width: 400px;
+    max-width: 500px;
 }
 
 .graphManagerHeader {
@@ -24,7 +24,6 @@
     position: absolute;
     top: -2px;
     left: 0px;
-    /* margin: 10px; */
 }
 
 .graphButtons {
@@ -49,7 +48,6 @@
 }
 
 .newGraphButton {
-    /* float: left; */
     position: absolute;
     left: 10px;
     top: 10px;
@@ -66,7 +64,6 @@
 
 .emptyList {
     width: 100%;
-    /* height: 100%; */
     text-align: center;
     padding-top: calc(50% - 70px);
 }
@@ -76,11 +73,12 @@
     overflow-y: auto;
 }
 
-.colorPicker {
-    position: absolute;
-    right: 10px;
-    max-width: 25%;
+.fieldsSelectionList_2 {
+    height: 300px;
+    width: 200px;
+    overflow-y: auto;
 }
+
 
 .fieldName {
     width: calc(75% - 10px);
@@ -104,17 +102,60 @@
     float: right;
 }
 
-.graphFinishedBtn {
-    margin-left: 20px;
-    margin-top: 20px;
-    width: 200px;
-}
-
-#singleColumnWidthSlider{
-    /* position: absolute;
-    left: calc(50% + 100px); */
-}
-
 .countryPicker {
-    /* color: #000!important; */
+    width: 90px;
+    padding-left: 5px;
+}
+
+.countryPickerInList {
+    width: 90px;
+    padding-left: 5px;
+}
+
+.colorPicker {
+    width: 70px;
+    padding-left: 5px;
+}
+
+.fieldNamePicker {
+    width: 240px;
+}
+
+.fieldNamePickerInList {
+    width: 220px;
+}
+
+.colorPickerInList {
+    width: 60px;
+    padding-left: 5px;
+}
+
+#fieldListDiv {
+    padding-top: 10px;
+    max-height: calc(100vh - 390px);
+    overflow-y: auto;
+}
+
+#fieldListDiv mat-form-field {
+    font-size: 12px!important;
+}
+
+.addDetailsBtn {
+    position: relative;
+    bottom: 5px;
+    margin-left: 5px;
+    min-width: unset;
+    padding: 0px 5px 0px 5px;
+}
+
+.deleteDetailBtn {
+    position: relative;
+    bottom: 10px;
+    margin-left: 5px;
+    min-width: unset;
+    padding: 0px 5px 0px 5px;
+}
+
+.dataListItem {
+    min-height: 64px;
 }

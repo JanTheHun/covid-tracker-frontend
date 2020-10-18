@@ -37,4 +37,14 @@ export class WebApiService {
       })
     })
   }
+  queryWebApiWithCountries(queryObj: QueryDto[]) {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.webApiURL.concat('/query'), queryObj).subscribe(result => {
+        resolve(result)
+      }, error => {
+        console.log(error)
+        reject(`error calling web API: ${error}`)
+      })
+    })
+  }
 }

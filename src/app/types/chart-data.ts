@@ -9,6 +9,7 @@ export interface ChartDataObject {
   lineChartLegend: boolean
   lineChartPlugins: any[]
   lineChartType: string,
-  query: any,
-  selectedColors: any
+  query?: any,
+  queryFields?: any,
+  selectedColors?: any
 }

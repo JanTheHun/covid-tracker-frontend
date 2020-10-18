@@ -22,6 +22,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
 
 import { ChartsModule } from 'ng2-charts';
 import { GraphManagerComponent } from './components/graph-manager/graph-manager.component';
@@ -61,6 +62,7 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
     MatChipsModule,
     MatSliderModule,
     MatDialogModule,
+    MatCardModule,
     
     ChartsModule
   ],

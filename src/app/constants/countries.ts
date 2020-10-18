@@ -1,3 +1,3 @@
 export const COUNTRIES = [
-    'HUN', 'GER'
+    'HUN', 'DEU'
 ]

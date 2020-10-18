@@ -1,14 +1,22 @@
 <mat-drawer-container class="example-container" autosize>
 
   <mat-drawer #drawer class="sidenav" mode="side">
-
+    
     <div class="closeButtonLine">
+      <button type="button"
+              class="graphFinishedBtn"
+              (click)="onGoClick()"
+              mat-raised-button
+              matTooltip="Grafikon létrehozása">
+        <mat-icon>playlist_add</mat-icon>
+      </button>
+
       <button type="button"
             class="closeDrawerBtn"
             mat-raised-button
             (click)="drawer.close()"
             matTooltip="Bezárás">
-        <mat-icon aria-hidden="false" aria-label="Example home icon">close</mat-icon>
+        <mat-icon>close</mat-icon>
       </button>
 
       <button type="button"
@@ -16,7 +24,7 @@
               mat-raised-button
               (click)="onDeleteForm()"
               matTooltip="Mezők törlése">
-        <mat-icon aria-hidden="false" aria-label="Example home icon">delete</mat-icon>
+        <mat-icon>delete</mat-icon>
       </button>
     
     </div>
@@ -24,126 +32,151 @@
     <mat-accordion>
 
       <mat-expansion-panel #dateSelection>
+
         <mat-expansion-panel-header>
+
           <mat-panel-title>
             Időintervallum
           </mat-panel-title>
-        <mat-panel-description>
-          <ng-container>
-            {{fromDate ? (fromDate | date: 'yyyy-MM-dd') : 'kezdetektől'}} -> {{toDate ? (toDate | date: 'yyyy-MM-dd') : 'mai napig'}}
-          </ng-container>
-        </mat-panel-description>
+          <mat-panel-description>
+            <ng-container>
+              {{fromDate ? (fromDate | date: 'yyyy-MM-dd') : 'kezdetektől'}} -> {{toDate ? (toDate | date: 'yyyy-MM-dd') : 'mai napig'}}
+            </ng-container>
+          </mat-panel-description>
 
         </mat-expansion-panel-header>
 
 
-        <mat-form-field class="form-half-width" appearance="fill">
+        <mat-form-field class="form-half-width" appearance="outline">
           <mat-label>Kezdődátum</mat-label>
           <input matInput [matDatepicker]="fromPicker" (dateChange)="onDateChange($event, 'from')" [value]="fromDate">
           <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
           <mat-datepicker #fromPicker></mat-datepicker>
         </mat-form-field>
     
-        <mat-form-field class="form-half-width" appearance="fill">
+        <mat-form-field class="form-half-width" appearance="outline">
           <mat-label>Végdátum</mat-label>
           <input matInput [matDatepicker]="toPicker" (dateChange)="onDateChange($event, 'to')" [value]="toDate">
           <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
           <mat-datepicker #toPicker></mat-datepicker>
         </mat-form-field>
 
-        </mat-expansion-panel>
-    <!-- </mat-accordion>
+      </mat-expansion-panel>
 
-    <mat-accordion> -->
+      <mat-expansion-panel #detailsSelectionPanel>
 
-      <mat-expansion-panel #fieldsSelectionList>
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            Adatfajták
-          </mat-panel-title>
+          <mat-panel-title>Adatok</mat-panel-title>
           <mat-panel-description>
-            <ng-container *ngIf="selectedFields.length">
-              Kiválasztva: {{selectedFields.length}}
+            <ng-container *ngIf="queryFields.length">
+              Kiválasztva: {{queryFields.length}}
             </ng-container>
-            <ng-container *ngIf="selectedFields.length === 0">
+            <ng-container *ngIf="queryFields.length === 0">
               Válasszon ki legalább egy adatot!
             </ng-container>
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <mat-selection-list class="fieldsSelectionList" #fields (selectionChange)="onSelectionChange($event)">
-          <mat-list-option *ngFor="let field of fieldNames"
-                            [selected]="selectedFields.indexOf(field) >= 0"
-                            [value]="field" >{{getFieldName(field)}}</mat-list-option>
-        </mat-selection-list>
+        <div>
 
-        <mat-list>
-      
-          <ng-container>
-            <mat-list-item *ngFor="let field of selectedFields; let i = index;">
+          <mat-form-field appearance="outline" class="fieldNamePicker">
+            <mat-select [(value)]="selectedFieldName">
+        
+              <mat-option *ngFor="let field of fieldNames"
+                          [value]="field">{{fields[field]}}</mat-option>
+  
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="countryPicker">
+            <mat-select [(value)]="selectedCountry">
+        
+              <mat-option *ngFor="let country of countries"
+                          [value]="country">{{country}}</mat-option>
+  
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="colorPicker">
+  
+            <mat-select [(value)]="selectedColor"
+                        [style.backgroundColor]="selectedColor"
+                        [style.color]="selectedColor">
     
-              <mat-label class="fieldName">{{getFieldName(field)}}</mat-label>
+            <mat-option *ngFor="let color of colors"
+                      class="colorHolder"
+                      [value]="color"
+                      [style.backgroundColor]="color"
+                      [style.color]="color">
+            </mat-option>
     
-              <mat-select class="colorPicker"
-                          [(value)]="selectedColors[field]"
-                          [style.backgroundColor]="selectedColors[field]"
-                          [style.color]="selectedColors[field]">
-    
-                <mat-option *ngFor="let color of colors"
-                            class="colorHolder"
-                            [value]="color.rgbCode"
-                            [style.backgroundColor]="color.rgbCode"
-                            [style.color]="color.rgbCode">
-                </mat-option>
-    
-              </mat-select>
-    
-              <mat-divider *ngIf="i < selectedFields.length - 1"></mat-divider>
+            </mat-select>
+  
+          </mat-form-field>
+          <button type="button"
+                  class="addDetailsBtn"
+                  (click)="onAddDetailsClick()"
+                  mat-raised-button
+                  matTooltip="Adat hozzáadása a grafikonhoz">
+                  <mat-icon>playlist_add</mat-icon>
+          </button>  
+  
+          <div id="fieldListDiv">
+  
+            <mat-list>
+              <mat-list-item *ngFor="let queryField of queryFields; let i = index;" class="dataListItem">
+                
+                <mat-form-field appearance="outline" class="fieldNamePickerInList">
+                  <mat-select [(value)]="queryField.field">
               
-            </mat-list-item>
-          </ng-container>
+                    <mat-option *ngFor="let field of fieldNames"
+                                [value]="field">{{fields[field]}}</mat-option>
+        
+                  </mat-select>
+                </mat-form-field>
+        
+                <mat-form-field appearance="outline" class="countryPickerInList">
+                  <mat-select [(value)]="queryField.country">
+              
+                    <mat-option *ngFor="let country of countries"
+                                [value]="country">{{country}}</mat-option>
+        
+                  </mat-select>
+                </mat-form-field>
+        
+                <mat-form-field appearance="outline" class="colorPickerInList">
+        
+                  <mat-select [(value)]="queryField.color"
+                              [style.backgroundColor]="queryField.color"
+                              [style.color]="queryField.color">
+          
+                  <mat-option *ngFor="let color of colors"
+                            class="colorHolder"
+                            [value]="color"
+                            [style.backgroundColor]="color"
+                            [style.color]="color">
+                  </mat-option>
+          
+                  </mat-select>
+        
+                </mat-form-field>
+                <button type="button"
+                        class="deleteDetailBtn"
+                        mat-raised-button
+                        (click)="onDeleteDetailClick(i)"
+                        matTooltip="Grafikon adat törlése">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon">remove</mat-icon>
+                </button>
+              </mat-list-item>
+            </mat-list>
     
-        </mat-list>
+          </div>
+        </div>
 
-      </mat-expansion-panel>
-
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Ország
-          </mat-panel-title>
-          <mat-panel-description>
-            <ng-container *ngIf="selectedCountry">
-              Kiválasztva: {{selectedCountry}}
-            </ng-container>
-            <ng-container *ngIf="!selectedCountry">
-              Válasszon ki egy országot!
-            </ng-container>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-          <mat-select class="countryPicker"
-                            [(value)]="selectedCountry">
-      
-            <mat-option *ngFor="let country of countries"
-                        [value]="country">{{country}}</mat-option>
-
-          </mat-select>
 
       </mat-expansion-panel>
       
     </mat-accordion>
-
-    
-
-    <button type="button"
-            color="primary"
-            class="graphFinishedBtn"
-            (click)="onGoClick()"
-            mat-raised-button
-            [disabled]="selectedFields.length === 0"
-            matTooltip="Grafikon létrehozása">Grafikon hozzáadása</button>
-    
 
   </mat-drawer>
 
@@ -179,8 +212,7 @@
       </mat-button-toggle-group>
       
       <div>
-        <mat-slider id="singleColumnWidthSlider"
-                    color="primary"
+        <mat-slider color="primary"
                     *ngIf="selectedColumnNumber === '1'"
                     min="40"
                     max = "100"
