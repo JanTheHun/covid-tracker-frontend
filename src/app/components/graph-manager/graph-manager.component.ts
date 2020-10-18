@@ -71,8 +71,12 @@ export class GraphManagerComponent {
     return `${rowHeightRatio}:1`
   }
 
-  get formInValid() {
+  get isFormInValid() {
     return (this.queryFields.length === 0)
+  }
+
+  onListColorPickerChange() {
+    console.log(this.graphs)
   }
 
   allocateColorToFields() {
@@ -114,11 +118,23 @@ export class GraphManagerComponent {
   }
 
   onEditGraph(index: number) {
+    
     const graphData = Object.assign([], this.graphs[index])
     console.log(graphData)
-    this.queryFields = Object.assign([], graphData.queryFields)
     this.fromDate = graphData.query.from
     this.toDate = graphData.query.to
+
+    let newQueryFields = []
+    this.graphs[index].queryFields.forEach(q => {
+      newQueryFields.push({
+        field: q.field,
+        country: q.country,
+        color: q.color
+      })
+    })
+    console.log(newQueryFields)
+    this.queryFields = newQueryFields
+    
     this.drawerRef.open()
   }
 

@@ -6,6 +6,8 @@
       <button type="button"
               class="graphFinishedBtn"
               (click)="onGoClick()"
+              color="primary"
+              [disabled]="isFormInValid"
               mat-raised-button
               matTooltip="Grafikon létrehozása">
         <mat-icon>playlist_add</mat-icon>
@@ -147,6 +149,7 @@
                 <mat-form-field appearance="outline" class="colorPickerInList">
         
                   <mat-select [(value)]="queryField.color"
+                              (selectionChange)="onListColorPickerChange()"
                               [style.backgroundColor]="queryField.color"
                               [style.color]="queryField.color">
           
@@ -239,27 +242,31 @@
         <mat-grid-tile *ngFor="let graph of graphs; let i = index;">
             <div [style.width.%]="selectedColumnNumber === '1' ? singleColumnWidth : 100"
                   [style.height.%]="selectedColumnNumber === '1' ? singleColumnWidth : 100"
-                  class="displayArea"
+                  class="displayArea">
+
+              <div id="deleteBtnArea"
                   (mouseover)="onMouseStatus(i, true)"
                   (mouseleave)="onMouseStatus(i, false)">
 
-              <div class="graphButtons">
-
-                <button mat-button
-                        *ngIf="mouseHoverMap[i]"
-                        class="graphBtn"
-                        (click)="onDeleteGraph(i)"
-                        matTooltip="Grafikon törlése">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon">delete</mat-icon>
-                </button>
-                <button mat-button *ngIf="mouseHoverMap[i]"
-                        class="graphBtn"
-                        (click)="onEditGraph(i)"
-                        matTooltip="Grafikon megnyitása a szerkesztőben">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon">edit</mat-icon>
-                </button>
-
+                  <div class="graphButtons">
+    
+                    <button mat-button
+                            *ngIf="mouseHoverMap[i]"
+                            class="graphBtn"
+                            (click)="onDeleteGraph(i)"
+                            matTooltip="Grafikon törlése">
+                      <mat-icon aria-hidden="false" aria-label="Example home icon">delete</mat-icon>
+                    </button>
+                    <button mat-button *ngIf="mouseHoverMap[i]"
+                            class="graphBtn"
+                            (click)="onEditGraph(i)"
+                            matTooltip="Grafikon megnyitása a szerkesztőben">
+                      <mat-icon aria-hidden="false" aria-label="Example home icon">edit</mat-icon> 
+                    </button>
+    
+                  </div>
               </div>
+
               
               <app-display-chart class="chartArea" [chartData]="graph"></app-display-chart>
 
