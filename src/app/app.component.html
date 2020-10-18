@@ -1,8 +1,24 @@
 <mat-toolbar color="primary">
+
   <span>COVID-19 figyelő</span>
+  <div class="selectedCountry">
+
+    <mat-label>
+      Kiválasztott ország:
+    </mat-label>
+    <mat-form-field appearance="outline" class="countrySelect">
+  
+      <mat-select [(value)]="selectedCountry">
+          <mat-option *ngFor="let country of countries" [value]="country">{{country}}</mat-option>
+      </mat-select>
+  
+    </mat-form-field>
+
+  </div>
+
 </mat-toolbar>
 
 <mat-tab-group class="mainAppArea" #tabGroup [(selectedIndex)]="selectedIndex">
-  <mat-tab label="Legfrissebb adatok"><app-latest-landing (newchartclick)="switchToCharts()"></app-latest-landing>  </mat-tab>
-  <mat-tab label="Grafikonszerkesztő"><app-graph-manager></app-graph-manager> </mat-tab>
+  <mat-tab label="Legfrissebb adatok"><app-latest-landing [defaultCountry]="selectedCountry" [constants]="constants" (newchartclick)="switchToCharts()"></app-latest-landing>  </mat-tab>
+  <mat-tab label="Grafikonszerkesztő"><app-graph-manager [defaultCountry]="selectedCountry" [constants]="constants"></app-graph-manager> </mat-tab>
 </mat-tab-group>

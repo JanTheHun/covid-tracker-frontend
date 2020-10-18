@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WebApiService } from 'src/app/services/web-api.service'
 import { ProcessResultService } from 'src/app/services/process-result.service'
 import { QueryDto } from 'src/app/types/query-dto'
@@ -17,6 +17,23 @@ import { MatExpansionPanel } from '@angular/material/expansion'
   styleUrls: ['./graph-manager.component.css']
 })
 export class GraphManagerComponent {
+
+  constants: any = null
+
+  @Input('constants') 
+  set setConstants(data: any) {
+    if (data) {
+      // this.fields = data.fields
+      this.countries = data.countries
+    }
+  }
+
+  @Input('defaultCountry')
+  set setDefaultCountry(data: string) {
+    if (data) {
+      this.selectedCountry = data
+    }
+  }
 
   title = 'CovidTracker'
 
@@ -43,7 +60,7 @@ export class GraphManagerComponent {
   
   mouseHoverMap: any = {}
   
-  fields: any[]
+  fields: any[] = []
   colors: any[]
   countries: any[] = []
 
@@ -52,9 +69,9 @@ export class GraphManagerComponent {
     private processResult: ProcessResultService,
     private modalService: ModalService
   ) {
-    this.fields = FIELDS
     this.colors = COLORS
-    this.countries = COUNTRIES
+    this.fields = FIELDS
+    // this.countries = COUNTRIES
     this.selectedCountry = this.countries[0]
   }
 

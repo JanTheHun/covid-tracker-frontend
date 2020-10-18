@@ -16,9 +16,20 @@ export class WebApiService {
     this.webApiURL = environment.webApiURL
   }
 
-  getLatestData() {
+  getConstants() {
     return new Promise((resolve, reject) => {
-      this.http.get(this.webApiURL.concat('/latest')).subscribe(result => {
+      this.http.get(this.webApiURL.concat('/constants')).subscribe(result => {
+        resolve(result)
+      }, error => {
+        console.log(error)
+        reject(`error calling web API: ${error}`)
+      })
+    })
+  }
+
+  getLatestData(country: string) {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.webApiURL.concat('/latest'), { country }).subscribe(result => {
         resolve(result)
       }, error => {
         console.log(error)
@@ -37,9 +48,10 @@ export class WebApiService {
       })
     })
   }
-  queryWebApiWithCountries(queryObj: QueryDto[]) {
+
+  getDictionary(language: string) {
     return new Promise((resolve, reject) => {
-      this.http.post(this.webApiURL.concat('/query'), queryObj).subscribe(result => {
+      this.http.post(this.webApiURL.concat('/dictionary'), { language }).subscribe(result => {
         resolve(result)
       }, error => {
         console.log(error)

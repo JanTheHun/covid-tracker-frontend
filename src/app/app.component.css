@@ -6,3 +6,18 @@
 .mainAppArea {
     height: calc(100% - 64px);
 }
+
+.countrySelect {
+    font-size: 14px;
+    position: relative;
+    /* top: 10px; */
+    left: 20px;
+    text-align: center;
+}
+
+.selectedCountry {
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    left: 300px;
+}

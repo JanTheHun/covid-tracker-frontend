@@ -87,14 +87,14 @@ export class ProcessResultService {
         } else {
           chartLabel = `${this.fields[field.field]}, ${country}`
         }
-        console.log('label:', chartLabel)
+        // console.log('label:', chartLabel)
         let chartDataSet = newDataset.map(d=> {return d[field.field]})
         datasetToInsert.push({
           data: chartDataSet,
           label: chartLabel,
           fill: false
         })
-        console.log('inserted:', datasetToInsert)
+        // console.log('inserted:', datasetToInsert)
         newLineChartColors.push({
           backgroundColor: field.color,
           borderColor: field.color,
@@ -105,7 +105,7 @@ export class ProcessResultService {
       })
     })
 
-    console.log('line chart data:', newLineChartData)
+    // console.log('line chart data:', newLineChartData)
 
     let returnObj = {
       lineChartData: newLineChartData,
@@ -118,7 +118,7 @@ export class ProcessResultService {
       query, 
       queryFields: Object.assign([], queryFields)
     }
-    console.log('return:', returnObj)
+    // console.log('return:', returnObj)
     return  returnObj
   }
 

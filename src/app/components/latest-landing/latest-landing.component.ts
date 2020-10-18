@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { WebApiService } from 'src/app/services/web-api.service'
 import { QueryDto } from 'src/app/types/query-dto'
 import { ProcessResultService } from 'src/app/services/process-result.service'
@@ -13,54 +13,82 @@ import { DictionaryService } from 'src/app/services/dictionary.service'
 })
 export class LatestLandingComponent implements OnInit {
 
+  @Input('constants') 
+  set setConstants(data: any) {
+    if (data) {
+      this.countries = data.countries
+    }
+  }
+
+  @Input('defaultCountry')
+  set setDefaultCountry(data: string) {
+    if (data) {
+      this.selectedCountry = data
+      this.getLatestData()
+    }
+  }
+
   @Output() newchartclick = new EventEmitter()
 
   processedChartData: ChartDataObject
-  latestData: any
+  latestData: any = null
 
-  dictionary
+  selectedCountry: string = null
+
+  countries: string[] = []
+
+  // dictionary
 
   constructor(
     private webApi: WebApiService,
     private processResult: ProcessResultService,
     private modalService: ModalService,
-    private dictionaryService: DictionaryService
+    // private dictionaryService: DictionaryService
   ) {
-    this.dictionary = dictionaryService.dictionary
-    console.log(this.dictionary)
+    // this.dictionary = dictionaryService.dictionary
+    // console.log(this.dictionary)
   }
 
   onNewChartClick() {
     this.newchartclick.emit()
   }
 
-  onLangChange() {
-    this.dictionaryService.setLanguage('en')
-    console.log(this.dictionary)
-  }
+  // onLangChange() {
+  //   this.dictionaryService.setLanguage('en')
+  //   console.log(this.dictionary)
+  // }
 
-  ngOnInit(): void {
+  getLatestData() {
 
-    const selectedFields = ['new_cases', 'new_cases_smoothed']
-    const selectedColors: any = {
-      'new_cases': '#00f',
-      'new_cases_smoothed': '#f00'
-    }
+    const queryFields: any[] = [
+      {
+        field: 'new_cases',
+        country: this.selectedCountry,
+        color: '#0ff'
+      },
+      {
+        field: 'new_cases_smoothed',
+        country: this.selectedCountry,
+        color: '#f00'
+      }
+    ]
+    const selectedFields = queryFields.map(q => { return q.field })
     const query: QueryDto = {
       to: new Date(),
       from: new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 7)),
-      fields: selectedFields,
-      countries: ["HUN"]
+      fields: queryFields.map(q => { return q.field }),
+      countries: [this.selectedCountry]
     }
     Promise.all([
       this.webApi.queryWebApi(query),
-      this.webApi.getLatestData()
+      this.webApi.getLatestData(this.selectedCountry)
     ])
       .then((result: any[]) => {
         if (result[0].success === false || result[1].success === false) {
           this.modalService.openErrorDialog('Kommunikációs hiba a szerverrel, próbálja újra kicsit később!')  
         } else {
-          this.processedChartData = this.processResult.processResult(result[0], query, selectedColors )
+          // this.processedChartData = this.processResult.processResult(result[0], query, selectedColors )
+          this.processedChartData = this.processResult.processResultWithCountries(result[0], query, queryFields )
           this.latestData = result[1]
         }
 
@@ -68,7 +96,8 @@ export class LatestLandingComponent implements OnInit {
       .catch(error => {
         this.modalService.openErrorDialog('Nem sikerült a legfrissebb adatok betöltése')
       })
-
   }
+
+  ngOnInit(): void {}
 
 }
