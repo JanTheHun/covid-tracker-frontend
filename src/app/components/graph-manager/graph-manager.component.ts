@@ -75,10 +75,6 @@ export class GraphManagerComponent {
     return (this.queryFields.length === 0)
   }
 
-  onListColorPickerChange() {
-    console.log(this.graphs)
-  }
-
   allocateColorToFields() {
     for(let field of this.selectedFields) {
       if (!this.selectedColors[field]) {
@@ -120,7 +116,6 @@ export class GraphManagerComponent {
   onEditGraph(index: number) {
     
     const graphData = Object.assign([], this.graphs[index])
-    console.log(graphData)
     this.fromDate = graphData.query.from
     this.toDate = graphData.query.to
 
@@ -132,9 +127,7 @@ export class GraphManagerComponent {
         color: q.color
       })
     })
-    console.log(newQueryFields)
     this.queryFields = newQueryFields
-    
     this.drawerRef.open()
   }
 
@@ -160,7 +153,6 @@ export class GraphManagerComponent {
   }
 
   onDeleteDetailClick(index: number) {
-    console.log(index)
     const newQueryFields = Object.assign([], this.queryFields)
     newQueryFields.splice(index, 1)
     this.queryFields = newQueryFields
@@ -171,10 +163,6 @@ export class GraphManagerComponent {
   }
 
   onAddDetailsClick() {
-    console.log(this.selectedFieldName)
-    console.log(this.selectedCountry)
-    console.log(this.selectedColor)
-
     let newField = {
       field: this.selectedFieldName,
       country: this.selectedCountry,
@@ -189,25 +177,21 @@ export class GraphManagerComponent {
 
     let selectedFields: string[] = Array.from(new Set(currentQueryFields.map(q=> { return q.field })))
     let selectedCountries: string[] = Array.from(new Set(currentQueryFields.map(q=> { return q.country })))
-    console.log('saved queryFields:', this.queryFields)
     let query: QueryDto = {
       from: this.fromDate ? this.fromDate : "2020-03-01",
       to: this.toDate ? this.toDate : new Date(),
       fields: selectedFields,
       countries: selectedCountries
     }
-    console.log('graphs 1: ', this.graphs)
     this.webApi.queryWebApi(query)
     .then((result: any | { success: boolean }) => {
       if (result.success === false) {
         this.modalService.openErrorDialog('Kommunikációs hiba a szerverrel, próbálja újra kicsit később!')
       } else {
         let processed: ChartDataObject = this.processResult.processResultWithCountries(result, query, currentQueryFields )
-        console.log('processed: ', processed)
         let newGraphs = Object.assign([], this.graphs)
         newGraphs.push(processed)
         this.graphs = newGraphs
-        console.log('graphs 2: ', this.graphs)
         this.resetForm()
         this.drawerRef.close()
       }
